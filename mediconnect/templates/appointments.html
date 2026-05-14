@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Appointments — MediConnect{% endblock %}
+{% block nav_appointments %}active{% endblock %}
+
+{% block content %}
+
+<!-- ══════════════════════════════════
+     APPOINTMENTS PAGE
+══════════════════════════════════ -->
+
+<div class="section-title">📅 My Appointments</div>
+
+{% if appointments %}
+  {% for appt in appointments %}
+  <div class="appt-card">
+
+    <!-- Date Box -->
+    <div class="appt-date">
+      <div class="appt-day">{{ appt.date|date:"d" }}</div>
+      <div class="appt-month">{{ appt.date|date:"M"|upper }}</div>
+    </div>
+
+    <!-- Info -->
+    <div class="appt-info">
+      <div class="appt-name">Dr. {{ appt.doctor.user.get_full_name }}</div>
+      <div class="appt-spec">{{ appt.doctor.specialty }}</div>
+      <div class="appt-time">⏰ {{ appt.time_slot }}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px;">
+        💰 Fee: ₹{{ appt.doctor.fee }}
+      </div>
+    </div>
+
+    <!-- Status -->
+    {% if appt.status == 'booked' %}
+      <span class="appt-status confirmed">Confirmed</span>
+    {% elif appt.status == 'completed' %}
+      <span class="appt-status" style="background:#eff6ff;color:#1d4ed8;">Completed</span>
+    {% else %}
+      <span class="appt-status" style="background:#fee2e2;color:#dc2626;">Cancelled</span>
+    {% endif %}
+
+  </div>
+
+  <!-- Rate Button if completed -->
+  {% if appt.status == 'completed' %}
+    <div style="margin:-8px 0 14px; text-align:right; padding-right:4px;">
+      <a href="{% url 'doctor_detail' appt.doctor.id %}">
+        <button style="padding:6px 14px;background:var(--accent);color:white;
+          border:none;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;">
+          ⭐ Rate Doctor
+        </button>
+      </a>
+    </div>
+  {% endif %}
+
+  {% endfor %}
+
+{% else %}
+  <!-- No Appointments -->
+  <div style="text-align:center;padding:60px 20px;color:#aaa;">
+    <div style="font-size:60px;margin-bottom:14px;">📭</div>
+    <div style="font-size:16px;font-weight:600;color:#666;">No appointments yet</div>
+    <div style="font-size:13px;margin-top:6px;">Book your first doctor appointment!</div>
+    <a href="{% url 'doctors' %}">
+      <button style="margin-top:16px;padding:12px 28px;background:var(--primary);
+        color:white;border:none;border-radius:12px;cursor:pointer;
+        font-size:14px;font-weight:600;">
+        👨‍⚕️ Find a Doctor
+      </button>
+    </a>
+  </div>
+{% endif %}
+
+{% endblock %}

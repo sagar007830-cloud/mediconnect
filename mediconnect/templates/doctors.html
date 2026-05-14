@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Doctors — MediConnect{% endblock %}
+{% block nav_doctors %}active{% endblock %}
+
+{% block content %}
+
+<!-- ══════════════════════════════════
+     DOCTORS LIST PAGE
+══════════════════════════════════ -->
+
+<!-- Page Title -->
+<div class="section-title">All Doctors</div>
+
+<!-- Search Result Info -->
+{% if query %}
+  <div style="margin-bottom:14px; font-size:13px; color:var(--muted);">
+    🔍 Results for: <strong style="color:var(--primary);">{{ query }}</strong>
+    — {{ doctors.count }} doctor(s) found
+    <a href="{% url 'doctors' %}" style="color:var(--accent); margin-left:8px; font-size:12px;">Clear ✕</a>
+  </div>
+{% endif %}
+
+<!-- Filter Tabs -->
+<div style="display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap;">
+  <a href="{% url 'doctors' %}" class="filter-tab {% if not query %}active{% endif %}">All</a>
+  <a href="?q=Cardiologist"    class="filter-tab">❤️ Heart</a>
+  <a href="?q=Dermatologist"   class="filter-tab">🧴 Skin</a>
+  <a href="?q=Orthopedic"      class="filter-tab">🦴 Bones</a>
+  <a href="?q=Pediatrician"    class="filter-tab">👶 Child</a>
+  <a href="?q=Dentist"         class="filter-tab">🦷 Dental</a>
+  <a href="?q=Neurologist"     class="filter-tab">🧠 Neuro</a>
+</div>
+
+<!-- Doctors List -->
+{% if doctors %}
+  {% for doctor in doctors %}
+  <div class="doctor-card fade-in">
+
+    <!-- Avatar -->
+    <div class="doctor-avatar">👨‍⚕️</div>
+
+    <!-- Info -->
+    <div class="doctor-info">
+      <div class="doctor-name">Dr. {{ doctor.user.get_full_name }}</div>
+      <div class="doctor-specialty">{{ doctor.specialty }} • {{ doctor.experience }}+ yrs exp</div>
+
+      <!-- Status + Fee -->
+      <div class="doctor-meta">
+        {% if doctor.status == 'available' %}
+          <span class="status-badge available">
+            <span class="status-dot"></span>Available
+          </span>
+        {% elif doctor.status == 'busy' %}
+          <span class="status-badge busy">
+            <span class="status-dot"></span>Busy
+          </span>
+        {% else %}
+          <span class="status-badge offline">
+            <span class="status-dot"></span>Off Today
+          </span>
+        {% endif %}
+        <span class="fee-tag">₹{{ doctor.fee }}</span>
+      </div>
+
+      <!-- Rating -->
+      <div class="doctor-meta" style="margin-top:4px;">
+        <span class="stars">
+          {% for i in "12345" %}
+            {% if forloop.counter <= doctor.rating %}★{% else %}☆{% endif %}
+          {% endfor %}
+        </span>
+        <span style="font-size:11px;color:#888;">{{ doctor.rating }}/5</span>
+        {% if doctor.status == 'available' %}
+          <span class="slots">Slots available</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Book Button -->
+    {% if doctor.status == 'available' %}
+      <a href="{% url 'book' doctor.id %}">
+        <button class="book-btn">Book</button>
+      </a>
+    {% else %}
+      <button class="book-btn" disabled>Unavail</button>
+    {% endif %}
+
+  </div>
+  {% endfor %}
+
+{% else %}
+  <!-- No Doctors Found -->
+  <div style="text-align:center; padding:50px 20px; color:#aaa;">
+    <div style="font-size:60px; margin-bottom:14px;">😔</div>
+    <div style="font-size:16px; font-weight:600; color:#666;">No doctors found</div>
+    <div style="font-size:13px; margin-top:6px;">Try searching something else</div>
+    <a href="{% url 'doctors' %}">
+      <button style="margin-top:16px; padding:10px 24px; background:var(--primary);
+        color:white; border:none; border-radius:12px; cursor:pointer; font-size:14px;">
+        View All Doctors
+      </button>
+    </a>
+  </div>
+{% endif %}
+
+{% endblock %}
+
+
+{% block extra_css %}
+<style>
+  .filter-tab {
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: white;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1.5px solid var(--border);
+    transition: all 0.2s;
+  }
+
+  .filter-tab:hover,
+  .filter-tab.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+</style>
+{% endblock %}

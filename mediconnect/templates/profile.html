@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile — MediConnect{% endblock %}
+{% block nav_profile %}active{% endblock %}
+
+{% block content %}
+
+<!-- ══════════════════════════════════
+     PATIENT PROFILE PAGE
+══════════════════════════════════ -->
+
+{% if user.is_authenticated %}
+
+  <!-- Profile Header -->
+  <div class="profile-header">
+    <div class="profile-avatar-large">👤</div>
+    <div style="font-size:20px;font-weight:700;">
+      {{ user.get_full_name }}
+    </div>
+    <div style="font-size:13px;opacity:0.8;">
+      Patient ID: #MC-{{ user.id|stringformat:"05d" }}
+    </div>
+  </div>
+
+  <!-- Profile Info Card -->
+  <div class="profile-info-card">
+    <div class="info-row">
+      <span class="info-label">Email</span>
+      <span class="info-value">{{ user.email }}</span>
+    </div>
+    {% if patient %}
+    <div class="info-row">
+      <span class="info-label">Phone</span>
+      <span class="info-value">{{ patient.phone }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Blood Group</span>
+      <span class="info-value">{{ patient.blood_group }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Age</span>
+      <span class="info-value">{{ patient.age }} years</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Total Visits</span>
+      <span class="info-value">{{ patient.appointments.count }} appointments</span>
+    </div>
+    {% endif %}
+    <div class="info-row">
+      <span class="info-label">Member Since</span>
+      <span class="info-value">{{ user.date_joined|date:"M Y" }}</span>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div style="padding: 0 16px;">
+    <a href="{% url 'appointments' %}">
+      <button class="submit-btn" style="margin-bottom:12px;">
+        📅 My Appointments
+      </button>
+    </a>
+    <a href="{% url 'logout' %}">
+      <button class="submit-btn"
+        style="background:linear-gradient(135deg,#dc2626,#ef4444);">
+        🚪 Logout
+      </button>
+    </a>
+  </div>
+
+{% else %}
+  <!-- Not Logged In -->
+  <div style="text-align:center;padding:60px 20px;">
+    <div style="font-size:60px;margin-bottom:14px;">🔐</div>
+    <div style="font-size:16px;font-weight:600;color:#666;">Please login first</div>
+    <a href="{% url 'login' %}">
+      <button style="margin-top:16px;padding:12px 28px;background:var(--primary);
+        color:white;border:none;border-radius:12px;cursor:pointer;
+        font-size:14px;font-weight:600;">
+        Login Now
+      </button>
+    </a>
+  </div>
+{% endif %}
+
+{% endblock %}

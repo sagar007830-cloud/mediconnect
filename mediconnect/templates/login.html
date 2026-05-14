@@ -1,0 +1,299 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login — MediConnect{% endblock %}
+
+{% block content %}
+
+<!-- ══════════════════════════════════
+     LOGIN PAGE
+══════════════════════════════════ -->
+
+<!-- Hero Section -->
+<div class="login-hero">
+  <span class="login-hero-icon">🏥</span>
+  <h1>Welcome Back!</h1>
+  <p>Login to your MediConnect account</p>
+</div>
+
+<!-- Login Card -->
+<div class="login-card">
+
+  <!-- Role Tabs: Patient / Doctor -->
+  <div class="role-selector">
+    <button class="role-btn active" id="patientTab" onclick="switchRole('patient')">
+      🧑 Patient
+    </button>
+    <button class="role-btn" id="doctorTab" onclick="switchRole('doctor')">
+      👨‍⚕️ Doctor
+    </button>
+  </div>
+
+  <!-- Django Form Errors -->
+  {% if form.errors %}
+    <div class="flash-message flash-error">
+      ❌ Invalid email or password. Please try again.
+    </div>
+  {% endif %}
+
+  <!-- LOGIN FORM -->
+  <form method="POST" action="{% url 'login' %}">
+    {% csrf_token %}
+
+    <!-- Hidden role field -->
+    <input type="hidden" name="role" id="roleField" value="patient">
+
+    <!-- Email -->
+    <div class="field-group">
+      <label class="field-label">Email Address</label>
+      <div class="field-wrap">
+        <span class="field-icon">📧</span>
+        <input
+          class="field-input"
+          type="email"
+          name="username"
+          placeholder="Enter your email"
+          required
+        />
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="field-group">
+      <label class="field-label">Password</label>
+      <div class="field-wrap">
+        <span class="field-icon">🔒</span>
+        <input
+          class="field-input"
+          type="password"
+          name="password"
+          placeholder="Enter your password"
+          required
+        />
+      </div>
+    </div>
+
+    <!-- Doctor Extra Field -->
+    <div class="field-group" id="licenseField" style="display:none;">
+      <label class="field-label">Medical License No.</label>
+      <div class="field-wrap">
+        <span class="field-icon">🪪</span>
+        <input
+          class="field-input"
+          type="text"
+          name="license_no"
+          placeholder="e.g. MCI-2024-XXXXX"
+        />
+      </div>
+    </div>
+
+    <!-- Forgot Password -->
+    <div class="forgot-link">
+      <a href="#">Forgot Password?</a>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="login-submit">
+      Login →
+    </button>
+
+  </form>
+
+  <!-- Signup Link -->
+  <div class="login-footer">
+    Don't have an account?
+    <a href="{% url 'signup' %}">Sign Up Free</a>
+  </div>
+
+</div>
+
+<!-- Extra spacing for bottom nav -->
+<div style="height: 30px;"></div>
+
+{% endblock %}
+
+
+{% block extra_css %}
+<style>
+  /* Login Hero */
+  .login-hero {
+    background: linear-gradient(135deg, #085c50 0%, #0b7b6b 60%, #0e9090 100%);
+    padding: 50px 24px 70px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .login-hero::before {
+    content: '';
+    position: absolute;
+    top: -50px; right: -50px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+
+  .login-hero-icon {
+    font-size: 60px;
+    display: block;
+    margin-bottom: 12px;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+  }
+
+  .login-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px; font-weight: 700;
+    color: white;
+    margin-bottom: 6px;
+  }
+
+  .login-hero p {
+    color: rgba(255,255,255,0.75);
+    font-size: 13px;
+  }
+
+  /* Login Card */
+  .login-card {
+    background: white;
+    margin: -36px 16px 20px;
+    border-radius: 24px;
+    padding: 26px 22px 30px;
+    box-shadow: 0 12px 50px rgba(10,110,110,0.18);
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Role Tabs */
+  .role-selector {
+    display: flex;
+    background: var(--bg);
+    border-radius: 14px;
+    padding: 4px;
+    margin-bottom: 22px;
+    gap: 4px;
+  }
+
+  .role-btn {
+    flex: 1; padding: 11px 8px;
+    border: none; border-radius: 11px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 700;
+    cursor: pointer;
+    color: var(--muted);
+    background: transparent;
+    transition: all 0.25s;
+  }
+
+  .role-btn.active {
+    background: white;
+    color: var(--primary);
+    box-shadow: 0 3px 12px rgba(10,110,110,0.15);
+  }
+
+  /* Field Styles */
+  .field-group  { margin-bottom: 16px; }
+
+  .field-label {
+    display: block;
+    font-size: 11px; font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 7px;
+  }
+
+  .field-wrap   { position: relative; }
+
+  .field-icon {
+    position: absolute; left: 13px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px; pointer-events: none;
+  }
+
+  .field-input {
+    width: 100%;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 13px 14px 13px 42px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; color: var(--text);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .field-input:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 4px rgba(10,110,110,0.08);
+  }
+
+  .field-input::placeholder { color: #bbb; }
+
+  .forgot-link {
+    text-align: right;
+    margin-top: -8px;
+    margin-bottom: 14px;
+  }
+
+  .forgot-link a {
+    font-size: 12px;
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  /* Submit Button */
+  .login-submit {
+    width: 100%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white; border: none;
+    padding: 16px;
+    border-radius: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px; font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 6px 20px rgba(10,110,110,0.3);
+  }
+
+  .login-submit:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  /* Footer */
+  .login-footer {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .login-footer a {
+    color: var(--primary);
+    font-weight: 700;
+    text-decoration: none;
+  }
+</style>
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+  function switchRole(role) {
+    // Update tabs
+    document.getElementById('patientTab').classList.toggle('active', role === 'patient');
+    document.getElementById('doctorTab').classList.toggle('active', role === 'doctor');
+
+    // Show/hide license field
+    document.getElementById('licenseField').style.display = role === 'doctor' ? 'block' : 'none';
+
+    // Update hidden role field
+    document.getElementById('roleField').value = role;
+  }
+</script>
+{% endblock %}

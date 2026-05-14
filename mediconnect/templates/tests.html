@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Medical Tests — MediConnect{% endblock %}
+{% block nav_tests %}active{% endblock %}
+
+{% block content %}
+
+<!-- ══════════════════════════════════
+     MEDICAL TESTS & COSTS PAGE
+══════════════════════════════════ -->
+
+<div class="section-title">🧪 Medical Tests & Costs</div>
+
+<!-- Blood Tests -->
+<div class="cost-section">
+  <div class="cost-title">💉 Blood Tests</div>
+  <div class="cost-row">
+    <div class="cost-name"><div class="cost-icon">🩸</div>Complete Blood Count (CBC)</div>
+    <div class="cost-price">₹299</div>
+  </div>
+  <div class="cost-row">
+    <div class="cost-name"><div class="cost-icon">🍬</div>Blood Sugar (Fasting)</div>
+    <div class="cost-price">₹149</div>
+  </div>
+  <div class="cost-row">
+    <div class="cost-name"><div class="cost-icon">🧬</div>HbA1c (Diabetes)</div>
+    <div class="cost-price">₹499</div>
+  </div>
+  <div class="cost-row">
+    <div class="cost-name"><div class="cost-icon">💛</div>Lipid Profile</div>
+    <div class="cost-price">₹599</div>
+  </div>
+  <div class="cost-row">
+    <div class="cost-name"><div class="cost-icon">🔬</div>Thyroid (T3/T4/TSH)</div>
+    <div class="cost-price">₹799</div>
+  </div>
+</div>
+
+<!-- Radiology -->
+<div class="cost-section">
+  <div class="cost-title">🩻 Radiology</div>
+  <div class="cost-row">
+    <div class="cost-name"><div class="cost-icon">☢️</div>X-Ray (Chest)</div>
+    <div class="cost-price">₹399</div>
+  </div>
+  <div class="cost-row">
+    <div class="cost-name"><div class="cost-icon">🔊</div>Ultrasound (Abdomen)</div>
+    <div class="cost-price">₹799</div>
+  </div>
+  <div class="cost-row">
+    <div class="cost-name"><div class="cost-icon">🧲</div>MRI (Brain)</div>
+    <div class="cost-price">₹3,499</div>
+  </div>
+  <div class="cost-row">
+    <div class="cost-name"><div class="cost-icon">🌀</div>CT Scan</div>
+    <div class="cost-price">₹2,999</div>
+  </div>
+</div>
+
+<!-- Cardiac Tests -->
+<div class="cost-section">
+  <div class="cost-title">❤️ Cardiac Tests</div>
+  <div class="cost-row">
+    <div class="cost-name"><div class="cost-icon">📈</div>ECG</div>
+    <div class="cost-price">₹199</div>
+  </div>
+  <div class="cost-row">
+    <div class="cost-name"><div class="cost-icon">🫀</div>Echocardiogram</div>
+    <div class="cost-price">₹1,999</div>
+  </div>
+  <div class="cost-row">
+    <div class="cost-name"><div class="cost-icon">🏃</div>Stress Test (TMT)</div>
+    <div class="cost-price">₹1,499</div>
+  </div>
+</div>
+
+<!-- Urine Tests -->
+<div class="cost-section">
+  <div class="cost-title">🧫 Urine & Other Tests</div>
+  <div class="cost-row">
+    <div class="cost-name"><div class="cost-icon">🧪</div>Urine Routine</div>
+    <div class="cost-price">₹99</div>
+  </div>
+  <div class="cost-row">
+    <div class="cost-name"><div class="cost-icon">🦠</div>Culture & Sensitivity</div>
+    <div class="cost-price">₹499</div>
+  </div>
+  <div class="cost-row">
+    <div class="cost-name"><div class="cost-icon">💊</div>Vitamin D Test</div>
+    <div class="cost-price">₹999</div>
+  </div>
+  <div class="cost-row">
+    <div class="cost-name"><div class="cost-icon">🩺</div>Kidney Function Test</div>
+    <div class="cost-price">₹699</div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,171 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediConnect — {% block title %}Doctor & Patient Platform{% endblock %}</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+
+  <!-- Extra CSS block — child pages apna CSS add kar sakte hain -->
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     TOP SEARCH BAR (Every Page pe)
+══════════════════════════════════ -->
+<div class="top-bar">
+  <div class="top-bar-header">
+
+    <!-- Logo -->
+    <div class="logo">
+      <a href="{% url 'home' %}" style="text-decoration:none; color:white;">
+        Medi<span>Connect</span>
+      </a>
+    </div>
+
+    <!-- Top Right Icons -->
+    <div class="top-icons">
+
+      {% if user.is_authenticated %}
+        <!-- Logged in user -->
+        <span style="color:white; font-size:13px; font-weight:600;">
+          👋 {{ user.first_name }}
+        </span>
+        <a href="{% url 'logout' %}">
+          <button class="icon-btn" title="Logout">🚪</button>
+        </a>
+      {% else %}
+        <!-- Not logged in -->
+        <a href="{% url 'login' %}">
+          <button class="icon-btn relative" title="Login">
+            👤
+            <span class="notif-dot"></span>
+          </button>
+        </a>
+      {% endif %}
+
+      <!-- Notification Bell -->
+      <button class="icon-btn" title="Notifications">🔔</button>
+    </div>
+  </div>
+
+  <!-- Search Bar -->
+  <form method="GET" action="{% url 'doctors' %}">
+    <div class="search-box">
+      <input
+        type="text"
+        name="q"
+        id="searchInput"
+        placeholder="Search doctor name or disease..."
+        value="{{ request.GET.q }}"
+      />
+      <button type="submit" class="search-btn">🔍</button>
+    </div>
+  </form>
+
+  <!-- Quick Search Tags -->
+  <div class="search-tags">
+    <a href="{% url 'doctors' %}?q=Cardiologist"  class="tag">❤️ Heart</a>
+    <a href="{% url 'doctors' %}?q=Dermatologist" class="tag">🧴 Skin</a>
+    <a href="{% url 'doctors' %}?q=Orthopedic"    class="tag">🦴 Bones</a>
+    <a href="{% url 'doctors' %}?q=Pediatric"     class="tag">👶 Child</a>
+    <a href="{% url 'doctors' %}?q=Dentist"        class="tag">🦷 Dental</a>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     DJANGO FLASH MESSAGES
+     (Success, Error, Warning alerts)
+══════════════════════════════════ -->
+{% if messages %}
+  <div style="padding: 10px 16px;">
+    {% for message in messages %}
+      <div class="flash-message flash-{{ message.tags }}">
+        {% if message.tags == 'success' %}✅
+        {% elif message.tags == 'error' %}❌
+        {% elif message.tags == 'warning' %}⚠️
+        {% else %}ℹ️
+        {% endif %}
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+
+<!-- ══════════════════════════════════
+     MAIN CONTENT BLOCK
+     (Har page apna content yahan daalega)
+══════════════════════════════════ -->
+<div class="content">
+  {% block content %}
+  {% endblock %}
+</div>
+
+
+<!-- ══════════════════════════════════
+     BOTTOM NAVIGATION BAR
+══════════════════════════════════ -->
+<div class="bottom-nav">
+
+  <!-- Home -->
+  <a href="{% url 'home' %}" class="nav-item {% block nav_home %}{% endblock %}">
+    <span class="nav-icon">🏠</span>
+    <span class="nav-label">Home</span>
+  </a>
+
+  <!-- Doctors -->
+  <a href="{% url 'doctors' %}" class="nav-item {% block nav_doctors %}{% endblock %}">
+    <span class="nav-icon">👨‍⚕️</span>
+    <span class="nav-label">Doctors</span>
+  </a>
+
+  <!-- Tests -->
+  <a href="{% url 'tests' %}" class="nav-item {% block nav_tests %}{% endblock %}">
+    <span class="nav-icon">🧪</span>
+    <span class="nav-label">Tests</span>
+  </a>
+
+  <!-- Appointments -->
+  <a href="{% url 'appointments' %}" class="nav-item {% block nav_appointments %}{% endblock %}">
+    <span class="nav-icon">📅</span>
+    <span class="nav-label">Bookings</span>
+  </a>
+
+  <!-- Profile -->
+  <a href="{% url 'profile' %}" class="nav-item {% block nav_profile %}{% endblock %}">
+    <span class="nav-icon">👤</span>
+    <span class="nav-label">Profile</span>
+  </a>
+
+</div>
+
+
+<!-- ══════════════════════════════════
+     EXTRA JS BLOCK
+     (Child pages apna JS add kar sakte hain)
+══════════════════════════════════ -->
+{% block extra_js %}{% endblock %}
+
+
+<!-- Flash message auto hide -->
+<script>
+  setTimeout(() => {
+    document.querySelectorAll('.flash-message').forEach(m => {
+      m.style.opacity = '0';
+      m.style.transition = 'opacity 0.5s';
+      setTimeout(() => m.remove(), 500);
+    });
+  }, 3000);
+</script>
+
+</body>
+</html>

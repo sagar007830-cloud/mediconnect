@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Doctor Dashboard — MediConnect{% endblock %}
+
+{% block content %}
+
+<!-- ══════════════════════════════════
+     DOCTOR DASHBOARD PAGE
+══════════════════════════════════ -->
+
+<!-- Doctor Header -->
+<div class="profile-header">
+  <div class="profile-avatar-large">👨‍⚕️</div>
+  <div style="font-size:20px;font-weight:700;">
+    Dr. {{ user.get_full_name }}
+  </div>
+  <div style="font-size:13px;opacity:0.8;">
+    {{ doctor.specialty }} • {{ doctor.experience }}+ yrs experience
+  </div>
+  <div style="margin-top:8px;">
+    {% if doctor.status == 'available' %}
+      <span class="status-badge available" style="display:inline-flex;">
+        <span class="status-dot"></span>Available
+      </span>
+    {% elif doctor.status == 'busy' %}
+      <span class="status-badge busy" style="display:inline-flex;">
+        <span class="status-dot"></span>Busy
+      </span>
+    {% else %}
+      <span class="status-badge offline" style="display:inline-flex;">
+        <span class="status-dot"></span>Off Today
+      </span>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Stats Cards -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;">
+
+  <div style="background:white;border-radius:16px;padding:16px;box-shadow:var(--shadow);text-align:center;">
+    <div style="font-size:28px;font-weight:700;color:var(--primary);">
+      {{ appointments.count }}
+    </div>
+    <div style="font-size:12px;color:var(--muted);margin-top:4px;">Today's Patients</div>
+  </div>
+
+  <div style="background:white;border-radius:16px;padding:16px;box-shadow:var(--shadow);text-align:center;">
+    <div style="font-size:28px;font-weight:700;color:var(--accent);">
+      ⭐ {{ doctor.rating }}
+    </div>
+    <div style="font-size:12px;color:var(--muted);margin-top:4px;">Your Rating</div>
+  </div>
+
+</div>
+
+<!-- Update Status -->
+<div style="background:white;border-radius:20px;padding:18px;box-shadow:var(--shadow);margin-bottom:20px;">
+  <div class="cost-title">🟢 Update Your Status</div>
+  <form method="POST" action="{% url 'update_status' %}">
+    {% csrf_token %}
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+
+      <label style="flex:1;">
+        <input type="radio" name="status" value="available"
+          {% if doctor.status == 'available' %}checked{% endif %}
+          style="display:none;" onchange="this.form.submit()">
+        <span style="display:block;padding:10px;text-align:center;
+          border-radius:12px;border:2px solid
+          {% if doctor.status == 'available' %}#16a34a{% else %}var(--border){% endif %};
+          background:{% if doctor.status == 'available' %}#dcfce7{% else %}white{% endif %};
+          color:{% if doctor.status == 'available' %}#16a34a{% else %}var(--muted){% endif %};
+          font-size:13px;font-weight:600;cursor:pointer;">
+          🟢 Available
+        </span>
+      </label>
+
+      <label style="flex:1;">
+        <input type="radio" name="status" value="busy"
+          {% if doctor.status == 'busy' %}checked{% endif %}
+          style="display:none;" onchange="this.form.submit()">
+        <span style="display:block;padding:10px;text-align:center;
+          border-radius:12px;border:2px solid
+          {% if doctor.status == 'busy' %}#b45309{% else %}var(--border){% endif %};
+          background:{% if doctor.status == 'busy' %}#fef9c3{% else %}white{% endif %};
+          color:{% if doctor.status == 'busy' %}#b45309{% else %}var(--muted){% endif %};
+          font-size:13px;font-weight:600;cursor:pointer;">
+          🟡 Busy
+        </span>
+      </label>
+
+      <label style="flex:1;">
+        <input type="radio" name="status" value="offline"
+          {% if doctor.status == 'offline' %}checked{% endif %}
+          style="display:none;" onchange="this.form.submit()">
+        <span style="display:block;padding:10px;text-align:center;
+          border-radius:12px;border:2px solid
+          {% if doctor.status == 'offline' %}#dc2626{% else %}var(--border){% endif %};
+          background:{% if doctor.status == 'offline' %}#fee2e2{% else %}white{% endif %};
+          color:{% if doctor.status == 'offline' %}#dc2626{% else %}var(--muted){% endif %};
+          font-size:13px;font-weight:600;cursor:pointer;">
+          🔴 Off Today
+        </span>
+      </label>
+
+    </div>
+  </form>
+</div>
+
+<!-- Today's Appointments -->
+<div class="section-title">Today's Appointments</div>
+
+{% if appointments %}
+  {% for appt in appointments %}
+  <div class="appt-card">
+    <div class="appt-date">
+      <div class="appt-day">{{ appt.date|date:"d" }}</div>
+      <div class="appt-month">{{ appt.date|date:"M"|upper }}</div>
+    </div>
+    <div class="appt-info">
+      <div class="appt-name">{{ appt.patient.user.get_full_name }}</div>
+      <div class="appt-spec">Patient</div>
+      <div class="appt-time">⏰ {{ appt.time_slot }}</div>
+    </div>
+    {% if appt.status == 'booked' %}
+      <span class="appt-status confirmed">Booked</span>
+    {% elif appt.status == 'completed' %}
+      <span class="appt-status" style="background:#eff6ff;color:#1d4ed8;">Done</span>
+    {% endif %}
+  </div>
+  {% endfor %}
+
+{% else %}
+  <div style="text-align:center;padding:40px;color:#aaa;">
+    <div style="font-size:50px;margin-bottom:10px;">📭</div>
+    <div style="font-size:14px;font-weight:600;color:#666;">No appointments today</div>
+  </div>
+{% endif %}
+
+<!-- Logout -->
+<div style="padding:0 0 10px;">
+  <a href="{% url 'logout' %}">
+    <button class="submit-btn"
+      style="background:linear-gradient(135deg,#dc2626,#ef4444);">
+      🚪 Logout
+    </button>
+  </a>
+</div>
+
+{% endblock %}

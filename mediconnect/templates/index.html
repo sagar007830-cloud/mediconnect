@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home — MediConnect{% endblock %}
+{% block nav_home %}active{% endblock %}
+
+{% block content %}
+
+<!-- WELCOME BANNER -->
+<div class="banner">
+  <div class="banner-icon">🏥</div>
+  <div class="banner-text">
+    <h4>Your Health, Our Priority</h4>
+    <p>Connect with top doctors instantly — anytime, anywhere</p>
+  </div>
+</div>
+
+<!-- QUICK ACTIONS -->
+<div class="section-title">Quick Actions</div>
+<div class="quick-actions">
+  <a href="{% url 'doctors' %}" class="action-btn">
+    <span class="action-icon">👨‍⚕️</span>
+    <div class="action-label">Find Doctor</div>
+  </a>
+  <a href="{% url 'tests' %}" class="action-btn">
+    <span class="action-icon">🧪</span>
+    <div class="action-label">Lab Tests</div>
+  </a>
+  <a href="{% url 'appointments' %}" class="action-btn">
+    <span class="action-icon">📅</span>
+    <div class="action-label">My Bookings</div>
+  </a>
+  {% if user.is_authenticated %}
+    <a href="{% url 'profile' %}" class="action-btn">
+      <span class="action-icon">👤</span>
+      <div class="action-label">My Profile</div>
+    </a>
+  {% else %}
+    <a href="{% url 'login' %}" class="action-btn">
+      <span class="action-icon">🔐</span>
+      <div class="action-label">Login</div>
+    </a>
+  {% endif %}
+</div>
+
+<!-- AVAILABLE DOCTORS TODAY -->
+<div class="section-title">Available Doctors Today</div>
+{% if doctors %}
+  {% for doctor in doctors %}
+  <div class="doctor-card fade-in">
+    <div class="doctor-avatar">👨‍⚕️</div>
+    <div class="doctor-info">
+      <div class="doctor-name">Dr. {{ doctor.user.get_full_name }}</div>
+      <div class="doctor-specialty">{{ doctor.specialty }} • {{ doctor.experience }}+ yrs exp</div>
+      <div class="doctor-meta">
+        {% if doctor.status == 'available' %}
+          <span class="status-badge available"><span class="status-dot"></span>Available</span>
+        {% elif doctor.status == 'busy' %}
+          <span class="status-badge busy"><span class="status-dot"></span>Busy</span>
+        {% else %}
+          <span class="status-badge offline"><span class="status-dot"></span>Off Today</span>
+        {% endif %}
+        <span class="fee-tag">Rs.{{ doctor.fee }}</span>
+      </div>
+      <div class="doctor-meta" style="margin-top:4px;">
+        <span class="stars">
+          {% for i in "12345" %}
+            {% if forloop.counter <= doctor.rating %}★{% else %}☆{% endif %}
+          {% endfor %}
+        </span>
+        <span style="font-size:11px;color:#888;">{{ doctor.rating }}/5</span>
+      </div>
+    </div>
+    {% if doctor.status == 'available' %}
+      <a href="{% url 'book' doctor.id %}"><button class="book-btn">Book</button></a>
+    {% else %}
+      <button class="book-btn" disabled>Unavail</button>
+    {% endif %}
+  </div>
+  {% endfor %}
+{% else %}
+  <div style="text-align:center;padding:40px;color:#aaa;">
+    <div style="font-size:50px;margin-bottom:12px;">😔</div>
+    <div style="font-size:15px;font-weight:600;">No doctors available today</div>
+  </div>
+{% endif %}
+
+<!-- HELP & SUPPORT -->
+<div class="help-section">
+  <div class="help-title">Help & Support</div>
+  <div class="help-subtitle">We're here for you 24/7</div>
+  <div class="help-options">
+    <button class="help-option" style="text-decoration: none;"><a href="https:wa.me/919098153630" target="_blank"><span class="help-opt-icon">💬</span><span>Live Chat</span></a></button>
+    <button class="help-option"><a href="tel:+919098153630"><span class="help-opt-icon">📞</span><span>Call Us</span></a></button>
+    <button class="help-option"style="text-decoration: none;><a href="mailto:bansalsupport@mediconnect.com"><span class="help-opt-icon">📧</span><span>Email Us</span></a></button>
+    <button class="help-option"style="text-decoration: none;><span class="help-opt-icon">❓</span><span>FAQs</span></button>
+  </div>
+</div>
+
+{% endblock %}

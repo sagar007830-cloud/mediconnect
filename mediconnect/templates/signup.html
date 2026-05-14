@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Sign Up — MediConnect{% endblock %}
+
+{% block content %}
+
+<div class="signup-hero">
+  <span class="signup-hero-icon">👋</span>
+  <h1>Create Account</h1>
+  <p>Join MediConnect — Free Forever</p>
+</div>
+
+<div class="signup-card">
+
+  <div class="role-selector">
+    <button class="role-btn active" id="patientTab" onclick="switchSignupRole('patient')">
+      🧑 I'm a Patient
+    </button>
+    <button class="role-btn" id="doctorTab" onclick="switchSignupRole('doctor')">
+      👨‍⚕️ I'm a Doctor
+    </button>
+  </div>
+
+  <form method="POST" action="{% url 'signup' %}">
+    {% csrf_token %}
+    <input type="hidden" name="role" id="signupRoleField" value="patient">
+
+    <div class="field-group">
+      <label class="field-label">Full Name</label>
+      <div class="field-wrap">
+        <span class="field-icon">👤</span>
+        <input class="field-input" type="text" name="full_name" placeholder="Enter your full name" required />
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Email Address</label>
+      <div class="field-wrap">
+        <span class="field-icon">📧</span>
+        <input class="field-input" type="email" name="email" placeholder="Enter your email" required />
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Phone Number</label>
+      <div class="field-wrap">
+        <span class="field-icon">📱</span>
+        <input class="field-input" type="tel" name="phone" placeholder="+91 XXXXX XXXXX" required />
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Password</label>
+      <div class="field-wrap">
+        <span class="field-icon">🔒</span>
+        <input class="field-input" type="password" name="password1" placeholder="Create a strong password" required />
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Confirm Password</label>
+      <div class="field-wrap">
+        <span class="field-icon">🔒</span>
+        <input class="field-input" type="password" name="password2" placeholder="Repeat your password" required />
+      </div>
+    </div>
+
+    <!-- PATIENT FIELDS -->
+    <div id="patientFields">
+      <div class="field-group">
+        <label class="field-label">Blood Group</label>
+        <div class="field-wrap">
+          <span class="field-icon">🩸</span>
+          <select class="field-input" name="blood_group" style="padding-left:42px;">
+            <option value="">Select Blood Group</option>
+            <option>A+</option><option>A-</option>
+            <option>B+</option><option>B-</option>
+            <option>O+</option><option>O-</option>
+            <option>AB+</option><option>AB-</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Age</label>
+        <div class="field-wrap">
+          <span class="field-icon">🎂</span>
+          <input class="field-input" type="number" name="age" placeholder="Your age" min="1" max="120" />
+        </div>
+      </div>
+    </div>
+
+    <!-- DOCTOR FIELDS -->
+    <div id="doctorFields" style="display:none;">
+      <div class="field-group">
+        <label class="field-label">Specialty</label>
+        <div class="field-wrap">
+          <span class="field-icon">🏥</span>
+          <select class="field-input" name="specialty" style="padding-left:42px;">
+            <option value="">Select Specialty</option>
+            <option>Cardiologist</option>
+            <option>Dermatologist</option>
+            <option>Orthopedic</option>
+            <option>Pediatrician</option>
+            <option>Neurologist</option>
+            <option>Dentist</option>
+            <option>General Physician</option>
+            <option>Gynecologist</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Consultation Fee (Rs.)</label>
+        <div class="field-wrap">
+          <span class="field-icon">💰</span>
+          <input class="field-input" type="number" name="fee" placeholder="e.g. 500" min="0" />
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Experience (Years)</label>
+        <div class="field-wrap">
+          <span class="field-icon">📅</span>
+          <input class="field-input" type="number" name="experience" placeholder="e.g. 10" min="0" />
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Medical License No.</label>
+        <div class="field-wrap">
+          <span class="field-icon">🪪</span>
+          <input class="field-input" type="text" name="license_no" placeholder="e.g. MCI-2024-XXXXX" />
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="login-submit" style="margin-top:10px;">
+      Create Account →
+    </button>
+
+  </form>
+
+  <div class="login-footer">
+    Already have an account?
+    <a href="{% url 'login' %}">Login here</a>
+  </div>
+
+</div>
+
+<div style="height:30px;"></div>
+
+{% endblock %}
+
+
+{% block extra_css %}
+<style>
+  .signup-hero {
+    background: linear-gradient(135deg, #085c50 0%, #0b7b6b 60%, #0e9090 100%);
+    padding: 44px 24px 65px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .signup-hero-icon {
+    font-size: 55px; display: block;
+    margin-bottom: 10px;
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+  }
+  .signup-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px; font-weight: 700;
+    color: white; margin-bottom: 4px;
+  }
+  .signup-hero p { color: rgba(255,255,255,0.7); font-size: 13px; }
+  .signup-card {
+    background: white;
+    margin: -36px 16px 20px;
+    border-radius: 24px;
+    padding: 24px 20px 30px;
+    box-shadow: 0 12px 50px rgba(10,110,110,0.18);
+    position: relative; z-index: 10;
+  }
+  .role-selector {
+    display: flex; background: var(--bg);
+    border-radius: 14px; padding: 4px;
+    margin-bottom: 22px; gap: 4px;
+  }
+  .role-btn {
+    flex: 1; padding: 11px 8px;
+    border: none; border-radius: 11px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 700;
+    cursor: pointer; color: var(--muted);
+    background: transparent; transition: all 0.25s;
+  }
+  .role-btn.active {
+    background: white; color: var(--primary);
+    box-shadow: 0 3px 12px rgba(10,110,110,0.15);
+  }
+  .field-group  { margin-bottom: 16px; }
+  .field-label {
+    display: block; font-size: 11px; font-weight: 700;
+    color: var(--muted); text-transform: uppercase;
+    letter-spacing: 0.8px; margin-bottom: 7px;
+  }
+  .field-wrap   { position: relative; }
+  .field-icon {
+    position: absolute; left: 13px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px; pointer-events: none;
+  }
+  .field-input {
+    width: 100%; border: 2px solid var(--border);
+    border-radius: 12px; padding: 13px 14px 13px 42px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; color: var(--text);
+    outline: none; transition: border-color 0.2s; background: white;
+  }
+  .field-input:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 4px rgba(10,110,110,0.08);
+  }
+  .field-input::placeholder { color: #bbb; }
+  .login-submit {
+    width: 100%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white; border: none; padding: 16px;
+    border-radius: 14px; font-family: 'DM Sans', sans-serif;
+    font-size: 16px; font-weight: 700; cursor: pointer;
+    transition: all 0.2s; box-shadow: 0 6px 20px rgba(10,110,110,0.3);
+  }
+  .login-submit:hover { opacity: 0.9; transform: translateY(-1px); }
+  .login-footer {
+    text-align: center; margin-top: 16px;
+    font-size: 13px; color: var(--muted);
+  }
+  .login-footer a { color: var(--primary); font-weight: 700; text-decoration: none; }
+</style>
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+  function switchSignupRole(role) {
+    document.getElementById('patientTab').classList.toggle('active', role === 'patient');
+    document.getElementById('doctorTab').classList.toggle('active', role === 'doctor');
+    document.getElementById('patientFields').style.display = role === 'patient' ? 'block' : 'none';
+    document.getElementById('doctorFields').style.display  = role === 'doctor'  ? 'block' : 'none';
+    document.getElementById('signupRoleField').value = role;
+  }
+</script>
+{% endblock %}
